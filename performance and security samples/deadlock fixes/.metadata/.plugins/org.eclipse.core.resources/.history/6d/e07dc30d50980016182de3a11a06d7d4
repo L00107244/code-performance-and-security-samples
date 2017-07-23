@@ -1,0 +1,11 @@
+package DeadLock;
+
+import junit.framework.TestCase;
+
+public class DeadlockTest extends TestCase {
+
+	protected void setUp() throws Exception {
+		super.setUp();
+	}
+
+}

@@ -1,0 +1,132 @@
+package DeadLock;
+
+import java.util.Random; 
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+
+public class LockTimeout
+{
+	
+	static class Names
+	{
+		private final String name;
+        private final Lock lock = new ReentrantLock();
+        
+        public Names(String names) {
+            this.name = names;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+        public boolean impendingLock(Names names) throws InterruptedException {
+            Boolean Lock1 = false;
+            Boolean Lock2 = false;
+            Boolean Lock3 = false;
+            try {
+                Lock1 = lock.tryLock();
+                Lock2 = lock.tryLock();
+                Lock3 = names.lock.tryLock();
+            } finally {
+                if (! (Lock1 && Lock2 && Lock3)) {
+                    if (Lock1) {
+                        lock.unlock();
+                
+                    }
+                    if (Lock2) {
+                        lock.unlock();
+                    }
+                    if (Lock3) {
+                        names.lock.unlock();
+                        names.wait();
+                    }
+                }
+            }
+            return Lock1 && Lock2 && Lock3;
+        }
+        public void Lock(Names name) throws InterruptedException {
+            if (impendingLock(name)) {
+                try {
+                    System.out.format("%s: %s has"
+                        + " Locked !%n", 
+                        this.name, name.getName());
+                        name.unlock(this);
+                } finally {
+                    lock.unlock();
+                    name.lock.unlock();
+                }
+            } else {
+                System.out.format("%s: %s has unocked"+this.name, name.getName());
+                   
+                    
+            }
+        }
+        public void unlock(Names name) {
+            System.out.format("%s: %s has" +
+                " unlocked!%n",
+                this.name, name.getName());
+                 
+               
+        }
+    
+	}
+	 static class Loop implements Runnable {
+	        private Names name1;
+	        private Names name2;
+	        private Names name3;
+	      
+
+	        public Loop(Names name, Names names, Names name1) {
+	            this.name1 = name;
+	            this.name2 = names;
+	            this.name3 = name1;
+	        }
+	    
+	        public void run() {
+	            Random random = new Random();
+	            for (;;) {
+	                try {
+	                    Thread.sleep(random.nextInt(1000));
+	                } catch (InterruptedException e) {}
+	                
+	                 try {
+						name2.Lock(name1);
+					} catch (InterruptedException e) {
+						System.out.print("gave up");
+						e.printStackTrace();
+					}
+	                 
+	                 
+	            }
+	            
+	        }
+	    }
+	 private void Wait()
+		{
+			try
+			{
+				Thread.sleep(30000);
+			}
+			catch(InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	    public static void main(String[] args) throws InterruptedException
+	    {
+	    	Names obj1 = new Names("t1");
+			Names obj2 = new Names("t2");
+			Names obj3 = new Names("t3");
+			
+			
+	        new Thread(new Loop(obj1, obj2, obj3)).start();
+	        Thread.sleep(5000);
+	        new Thread(new Loop(obj2, obj3, obj1)).start();
+	       
+	    }
+}
+	 
+
+

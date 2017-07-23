@@ -1,0 +1,123 @@
+package Asignment4;
+
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+import java.util.jar.Attributes.Name;
+
+public class Question2 
+{
+	private static final int MegaBytes = 1024*1024;
+	private static final int length = 1000000;
+   public static void main(String[] args)
+   {
+	 //object of timer class
+	 
+	   long freeMemory;
+       long totalMemory;
+       long maxMemory;
+       long usedMemory;
+
+
+       //creates the array list
+	   ArrayList<Person> names = new ArrayList(length);
+	   
+	   //adds names to person
+	   Person p = new Person("paul");
+	   Person p1 = new Person("Stephen");
+	   Person p2 = new Person("Katie");
+	   Person p3 = new Person("Mark");
+	   Person p4 = new Person("CJ");
+	   Person p5 = new Person("Thommy");
+	   Person p6 = new Person("Mark");
+	   Person p7 = new Person("Thomas");
+	   Person p8 = new Person("Shaun");
+	   Person p9 = new Person("John");
+	   
+	   for(int i = 0; i< length; i++ )
+	   {
+		  // adds names to arraylist 
+		
+		   names.add(p);
+		   
+		   names.add(p1);
+		   
+		   names.add(p2);
+		   
+		   names.add(p3);
+		
+		   names.add(p4);
+		
+		   names.add(p5);
+		 
+		   names.add(p6);
+		   
+		   names.add(p7);
+		  
+		   names.add(p8);
+		   
+		   names.add(p9);
+		  
+		   
+	   }
+	   System.out.print(names+",");
+	   
+	   Runtime run = Runtime.getRuntime();
+		  freeMemory = run.freeMemory();
+       totalMemory = run.totalMemory();
+       usedMemory = run.totalMemory() - run.freeMemory();
+       System.out.println("Java run time was: "+run.getRuntime().toString());
+       System.out.println("The amount of memory used before garbage collection was: " + String.valueOf(bytesToMegabytes(usedMemory)) +" megabytes");
+		  run.gc();
+	      usedMemory = run.totalMemory() - run.freeMemory();
+	      System.out.println("The amount of memory used after garbage collection was: " + String.valueOf(bytesToMegabytes(usedMemory))+" megabytes");
+
+
+	   
+	   
+   }
+	 public static long bytesToMegabytes(long bytes)
+	  { 
+		  return bytes / MegaBytes;
+	  }
+	 public static long bytes(long bytes)
+	  { 
+		  return bytes;
+	  }
+}
+//person class
+class Person
+{
+	private String Name;
+
+	//Constructer
+	protected Person(String n)
+	{
+		Name = n;
+		
+	}
+	//set name method
+	protected void setName(String nameIn)
+	{
+		
+		Name = nameIn;
+		
+	}
+	//get name method
+	protected String getName()
+	{
+		return Name;
+	}
+	//to string method
+	public String toString()
+	{
+		return Name;
+	}
+	
+	
+}
+
+
+
